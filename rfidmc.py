@@ -4,7 +4,6 @@ import sys
 from configparser import ConfigParser
 
 import musicpd
-import playsound
 import spotipy
 from dotenv import load_dotenv
 from evdev import InputDevice, ecodes, list_devices
