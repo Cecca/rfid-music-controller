@@ -1,0 +1,32 @@
+[general]
+rfid_device = "HXGCoLtd Keyboard"
+spotify_device = "raspotify (raspberrypi)"
+mpd_host = "192.168.1.183"
+retry = 5
+
+[controls]
+stop = "0004041474"
+
+[spotify]
+# Bach variazioni Goldberg
+0010023576 = "spotify:album:1n5pafTMiQNC1CxWBA37Qb"
+# Schubert Messa
+0010025419 = "spotify:playlist:4nXTDZSBnSFZDUDyk0pxqh"
+# Amarcord album francais
+0010008495 = "spotify:album:0lPR2U83KwVuC0ZhfCoZ23"
+# Schumann Carnaval/Carnevale di Vienna
+0010025124 = "spotify:album:1SevQ2JkicBew5nzUCoNfh"
+# Petrushka/Oiseau de feu
+0009969563 = "spotify:album:69ZVuN0MEZjwVchwCOE65G"
+# Scarlatti sonate
+0010041687 = "spotify:album:13ZaM6xlNjd3UPESMWXAgo"
+# Boheme
+0009956057 = "spotify:album:2VqmB1X2CtRUXMWVIYbjCX"
+# Collier in my room
+0010002502 = "spotify:track:1b4qWC27ur4oCRA0Xj9EAH"
+# Beethoven concerti pianoforte
+0009935832 = "spotify:playlist:4XmMhJyrXFO1E92OuCVI9o"
+
+[mpd]
+# Radio 3
+0009989375 = "radio3"
