@@ -1,7 +1,7 @@
 [general]
 rfid_device = "HXGCoLtd Keyboard"
 spotify_device = "raspotify (raspberrypi)"
-mpd_host = "192.168.1.183"
+mpd_host = "192.168.1.65"
 retry = 5
 
 [controls]
@@ -26,6 +26,8 @@ stop = "0004041474"
 0010002502 = "spotify:track:1b4qWC27ur4oCRA0Xj9EAH"
 # Beethoven concerti pianoforte
 0009935832 = "spotify:playlist:4XmMhJyrXFO1E92OuCVI9o"
+# Talbot Path of miracles
+0007033654 = "spotify:track:2tOiFBGUsOoQOJhYkD6z6B"
 
 [mpd]
 # Radio 3

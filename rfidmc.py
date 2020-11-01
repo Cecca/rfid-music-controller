@@ -12,6 +12,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 logging.basicConfig(level=logging.INFO)
 
+pid = "/tmp/rfidmc.pid"
+
 # Important: run, as root, the following command
 #   usermod -a -G input
 def get_input_devices():
@@ -33,7 +35,7 @@ class Reader:
         try:
             self.dev
         except:
-            LOGGER.error("no device found: " + str(devices))
+            logging.error("no device found: " + str(devices))
             sys.exit('Could not find the device %s\n. Make sure is connected' % deviceName)
 
     def readCard(self):
@@ -56,10 +58,13 @@ class SpotifyController(object):
         self.device_name = device.strip('"')
         self.client_id = os.getenv("CLIENT_ID")
         self.client_secret = os.getenv("CLIENT_SECRET")
-        pass
+        self.connection = self.get_connection()
+        # Check if the device is available
+        self.get_device()
 
     def get_connection(self):
         if self.connection is None:
+            logging.info("connecting to Spotify")
             token = spotipy.util.prompt_for_user_token(
                 "ceccarellom", 
                 "user-read-recently-played user-read-playback-state user-modify-playback-state",
@@ -68,6 +73,7 @@ class SpotifyController(object):
                 redirect_uri='http://localhost:8888/callback'
             )
             self.connection = spotipy.Spotify(auth=token)
+            logging.info("successfully connected")
         return self.connection
 
     def reset(self):
@@ -78,6 +84,7 @@ class SpotifyController(object):
         devices = conn.devices()["devices"]
         for dev in devices:
             if dev['name'] == self.device_name:
+                logging.info("successfully found device %s", self.device_name)
                 return dev
         logging.error("device %s not found, available devices %s", self.device_name, devices)
         return None
@@ -92,8 +99,9 @@ class SpotifyController(object):
         device = self.get_device()["id"]
         skip = False
         try:
-            current = conn.current_playback()["context"]["uri"]
-            skip = current == uri
+            current_playback = conn.current_playback()
+            current = current_playback["context"]["uri"]
+            skip = current == uri and current_playback["is_playing"]
         except:
             # Do nothing, keep `skip` to the default of False
             pass
@@ -172,3 +180,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
