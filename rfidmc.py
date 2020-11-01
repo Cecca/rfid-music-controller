@@ -3,6 +3,7 @@ import os
 import sys
 from configparser import ConfigParser
 
+from select import select
 import musicpd
 import spotipy
 from dotenv import load_dotenv
@@ -23,8 +24,8 @@ class Reader:
         #self.reader = self
         path = os.path.dirname(os.path.realpath(__file__))
         self.keys = "X^1234567890XXXXqwertzuiopXXXXasdfghjklXXXXXyxcvbnmXXXXXXXXXXXXXXXXXXXXXXX"
-        devices = get_devices()
-        LOGGER.info("looking among " + str(list_devices()))
+        devices = get_input_devices()
+        logging.info("looking among " + str(list_devices()))
         for device in devices:
             if device.name == devname:
                 self.dev = device
