@@ -115,8 +115,11 @@ class SpotifyController(object):
             conn.start_playback(device_id=device, context_uri=context_uri, uris=uris)
 
     def stop(self):
+        logging.info("asking for connection and device id")
         conn = self.get_connection()
-        conn.pause_playback()
+        device = self.get_device()["id"]
+        logging.info("got connection and device id, no problems")
+        conn.pause_playback(device)
 
 
 def load_config(path):
@@ -144,7 +147,7 @@ def main():
         retry_count = 0
         should_try = True
 
-        while should_try and retry_count < max_retries:
+        while should_try:
             if retry_count > 0:
                 logging.warning("tentative %d", retry_count)
             try:
@@ -176,6 +179,9 @@ def main():
                     # Was already disconnected, do nothing
                     pass
                 retry_count += 1
+                if retry_count >= max_retries:
+                    logging.error("too many retries, exiting")
+                    sys.exit(1)
 
 
 if __name__ == "__main__":
