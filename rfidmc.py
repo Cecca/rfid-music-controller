@@ -54,30 +54,27 @@ class Reader:
 class SpotifyController(object):
     def __init__(self, device):
         load_dotenv()
-        self.connection = None
+        self.token = None
         self.device_name = device.strip('"')
         self.client_id = os.getenv("CLIENT_ID")
         self.client_secret = os.getenv("CLIENT_SECRET")
-        self.connection = self.get_connection()
+        self.get_connection()
         # Check if the device is available
         self.get_device()
 
     def get_connection(self):
-        if self.connection is None:
-            logging.info("connecting to Spotify")
-            token = spotipy.util.prompt_for_user_token(
+        logging.info("connecting to Spotify")
+        if self.token is None:
+            self.token = spotipy.util.prompt_for_user_token(
                 "ceccarellom", 
                 "user-read-recently-played user-read-playback-state user-modify-playback-state",
                 client_id=self.client_id,
                 client_secret=self.client_secret,
                 redirect_uri='http://localhost:8888/callback'
             )
-            self.connection = spotipy.Spotify(auth=token)
-            logging.info("successfully connected")
-        return self.connection
-
-    def reset(self):
-        self.connection = None
+        connection = spotipy.Spotify(auth=self.token)
+        logging.info("successfully connected")
+        return connection
 
     def get_device(self):
         conn = self.get_connection()
@@ -115,11 +112,14 @@ class SpotifyController(object):
             conn.start_playback(device_id=device, context_uri=context_uri, uris=uris)
 
     def stop(self):
-        logging.info("asking for connection and device id")
-        conn = self.get_connection()
-        device = self.get_device()["id"]
-        logging.info("got connection and device id, no problems")
-        conn.pause_playback(device)
+        try:
+            logging.info("asking for connection and device id")
+            conn = self.get_connection()
+            device = self.get_device()["id"]
+            logging.info("got connection and device id, no problems")
+            conn.pause_playback(device)
+        except:
+            logging.info("failed to top spotify")
 
 
 def load_config(path):
@@ -172,7 +172,6 @@ def main():
                 should_try = False
             except Exception as e:
                 logging.error("error %s", e)
-                spotify_controller.reset()
                 try:
                     mpd_controller.disconnect()
                 except:
